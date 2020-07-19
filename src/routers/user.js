@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router();
 //const axios = require('axios');
+const User = require('../models/User')
 
 router.get('/login', async (req, res) => {
     res.render('login', {
@@ -18,6 +19,7 @@ router.post('/authenticate', async(req, res) => {
         const { email, password } = req.body
         console.log(req.body)
         const user = await User.findByCredentials(email, password)
+        console.log(user)
         if (user.error) {
             return res.status(400).send('Login failed! Check authentication credentials. ' + user.error)
         }

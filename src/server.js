@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var exphbs  = require('express-handlebars');
+var bodyParser  = require('body-parser');
 
 const userRouter = require('./routers/user')
 
@@ -22,11 +23,10 @@ app.engine( 'hbs', exphbs( {
   partialsDir: __dirname + '/views/partials/'
 }));
 
-// var router = express.Router();
- 
-// router.get('/', function(req, res, next) {
-//     res.render('home', {layout: 'default', template: 'home-template'});
-//   });
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+require('./db/config')
 
 app.get('', (req, res)=>{
     res.render('home', {layout: 'main', data: {
