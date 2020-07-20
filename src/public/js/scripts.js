@@ -5,7 +5,7 @@ var ajaxCall = {
             method:'get',
             url: url,
             success: function(data, textStatus, jqXHR) {
-                alert();
+                //alert();
                 cbs(data, textStatus, jqXHR);
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -20,7 +20,7 @@ var ajaxCall = {
             data:data,
             url: url,
             success: function(data, textStatus, jqXHR) {
-                alert();
+                //alert();
                 cbs(data, textStatus, jqXHR);
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -28,4 +28,20 @@ var ajaxCall = {
             }
         });
     }
+}
+
+$(function(){
+    
+});
+
+var logout = function(){
+    ajaxCall.post('/user/logout', {},
+            success = function(data, textStatus, jqXHR)
+            {
+                document.location.href = '/user/login';
+            },
+            error = function(data, textStatus, jqXHR){
+                console.log(textStatus + ': ' + jqXHR);
+            }
+        );
 }

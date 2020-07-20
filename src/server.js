@@ -2,12 +2,15 @@ var express = require('express');
 var path = require('path');
 var exphbs  = require('express-handlebars');
 var bodyParser  = require('body-parser');
+var cookieParser = require('cookie-parser')
 
 const userRouter = require('./routers/user')
 
 const port = process.env.port || 3000;
  
 var app = express();
+
+app.use(cookieParser())
 
 //Serves static files (we need it to import a css file)
 app.use(express.static(path.join(__dirname, '/public')))

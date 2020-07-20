@@ -3,6 +3,7 @@ const router = express.Router();
 //const axios = require('axios');
 const User = require('../models/User')
 const Doctor = require('../models/Doctor')
+const jwt = require('jsonwebtoken')
 
 router.get('/login', async (req, res) => {
     res.render('login', {
@@ -20,7 +21,7 @@ router.post('/authenticate', async(req, res) => {
         const { email, password } = req.body
         console.log(req.body)
         const user = await User.findByCredentials(email, password)
-        console.log(user)
+        //console.log(user)
         if (user.error) {
             return res.status(400).send('Login failed! Check authentication credentials. ' + user.error)
         }
@@ -55,7 +56,7 @@ router.get('/doctors', async (req, res) => {
 router.get('/appointment/:id', async (req, res) => {
     let id = req.params.id;
     var result =  await Doctor.findById(id);
-    console.log(result)
+    //console.log(result)
     // let doctors = [];
     // for(let i=0;i<result.length;i++){
     //     doctors.push(result[i].toJSON())
@@ -66,18 +67,27 @@ router.get('/appointment/:id', async (req, res) => {
     })
 });
 
-router.get('/logout', async (req, res) => {
-    const result = await axios.get('http://localhost:3000/api/user/logoutall', {
-        headers:{
-            "Authorization" : "Bearer " + req.cookies.token
+router.post('/logout', async(req, res) => {
+    try {
+        //const token = req.header('Authorization').replace('Bearer ', '')
+       
+        var token = req.cookies.token;
+        //console.log(token);
+        if (!token) {
+          return res.status(200).send('Access Denied: No Token Provided!')
         }
-    });
-    
-    res.clearCookie('token');
-    
-    res.render('login',{
-        title:'Login'
-    })
+        else{
+          const data = jwt.verify(token, process.env.JWT_KEY)
+          //console.log(data)
+          const user = await User.findOne({ _id: data._id, 'tokens.token': token })
+          user.tokens.splice(0, user.tokens.length)
+          await user.save()
+          res.clearCookie('token');
+          res.send({user : user})
+        }
+    } catch (error) {
+        res.status(400).send('error')
+    }
 });
 
 module.exports = router;
