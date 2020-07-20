@@ -30,7 +30,7 @@ require('./db/config')
 
 app.get('', (req, res)=>{
     res.render('home', {layout: 'main', data: {
-      title : 'Home'
+      title : 'Dashboard'
     }});
 });
 
