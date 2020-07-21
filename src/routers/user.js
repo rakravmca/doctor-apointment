@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require('../models/User')
 const Doctor = require('../models/Doctor')
 const Appointment = require('../models/Appointment')
+const auth = require('../middleware/auth')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
@@ -36,7 +37,7 @@ router.post('/authenticate', async(req, res) => {
 
 });
 
-router.post('/logout', async(req, res) => {
+router.post('/logout', auth, async(req, res) => {
     try {
         //const token = req.header('Authorization').replace('Bearer ', '')
        
@@ -52,7 +53,7 @@ router.post('/logout', async(req, res) => {
           user.tokens.splice(0, user.tokens.length)
           await user.save()
           res.clearCookie('token');
-          res.send({user : user})
+          res.send({user : null})
         }
     } catch (error) {
         res.status(400).send('error')
@@ -64,21 +65,18 @@ router.post('/logout', async(req, res) => {
 //**********DOCTOR****************//
 //***************************************//
 
-router.get('/doctors', async (req, res) => {
+router.get('/doctors', auth, async (req, res) => {
     var result =  await Doctor.find();
-    //console.log(result)
+    //console.log(req.user)
+
     let doctors = [];
     for(let i=0;i<result.length;i++){
         doctors.push(result[i].toJSON())
     }
-    // var data = [];
-    // doctors.map(function(index, doct){
-    //     data.push(doct);
-    // })
-    
-    //console.log(doctors)
+
     res.render('doctors', {
         title :'Doctors',
+        user : req.user.toJSON(),
         doctors : doctors
     })
 });
@@ -87,21 +85,18 @@ router.get('/doctors', async (req, res) => {
 //**********APPOINTMENT****************//
 //***************************************//
 
-router.get('/doctors/book/:id', async (req, res) => {
+router.get('/doctors/book/:id', auth, async (req, res) => {
     let id = req.params.id;
     var result =  await Doctor.findById(id);
-    //console.log(result)
-    // let doctors = [];
-    // for(let i=0;i<result.length;i++){
-    //     doctors.push(result[i].toJSON())
-    // }
+
     res.render('appointment', {
         title :'Book Appointment',
+        user : req.user.toJSON(),
         doctor : result.toJSON()
     })
 });
 
-router.post('/appointment/book', async(req, res) => {
+router.post('/appointment/book', auth, async(req, res) => {
     console.log(req.body)
     try {
         const { appointment_date, doctor_id } = req.body
@@ -110,9 +105,9 @@ router.post('/appointment/book', async(req, res) => {
         var doctor =  await Doctor.findById(doctor_id);
 
         //Get user details
-        var token = req.cookies.token;
-        const data = jwt.verify(token, process.env.JWT_KEY);
-        const user = await User.findOne({ _id: data._id, 'tokens.token': token });
+        // var token = req.cookies.token;
+        // const data = jwt.verify(token, process.env.JWT_KEY);
+        const user = await User.findOne({ _id: req.user._id });
 
         let day_start_time = doctor.day_start_time;
         let appointment_slot_time = doctor.appointment_slot_time;
@@ -143,12 +138,12 @@ router.post('/appointment/book', async(req, res) => {
     }
 });
 
-router.get('/appointment/list', async (req, res) => {
+router.get('/appointment/list', auth, async (req, res) => {
     //Get user details
-    var token = req.cookies.token;
-    const data = jwt.verify(token, process.env.JWT_KEY);
-    const user = await User.findOne({ _id: data._id, 'tokens.token': token })
-    var result =  await Appointment.find({creater : user._id})
+    // var token = req.cookies.token;
+    // const data = jwt.verify(token, process.env.JWT_KEY);
+    const user = req.user; //await User.findOne({ _id: data._id, 'tokens.token': token })
+    var result =  await Appointment.find({creater : user._id}).sort({appointment_date: 1})
                 .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
     let appointments = [];
@@ -160,6 +155,7 @@ router.get('/appointment/list', async (req, res) => {
 
     res.render('appointment-list', {
         title :'Appointment List',
+        user : req.user.toJSON(),
         appointments : appointments
     })
 });

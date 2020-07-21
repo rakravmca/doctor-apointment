@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser')
 var moment = require('moment')
 
 const userRouter = require('./routers/user')
+const auth = require('./middleware/auth')
 
 const port = process.env.port || 3000;
  
@@ -50,10 +51,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 require('./db/config')
 
-app.get('', (req, res)=>{
-    res.render('home', {layout: 'main', data: {
-      title : 'Dashboard'
-    }});
+app.get('', auth, (req, res)=>{
+    res.render('home',  
+    { 
+      layout: 'main', 
+      title : 'Dashboard',
+      user : req.user.toJSON()});
 });
 
 app.use('/user', userRouter)
