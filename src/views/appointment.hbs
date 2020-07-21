@@ -12,7 +12,7 @@
                 <input type='text' class="form-control" id='datetimepicker' class='datepicker'/>
             </div>
             <div class="col-md-4">
-                <a href="#" class="btn btn-success btn-icon-split">
+                <a href="#" class="btn btn-success btn-icon-split" id="btnBook"> 
                     <span class="icon text-white-50">
                         <i class="fas fa-check"></i>
                     </span>
@@ -27,5 +27,22 @@
     $(function(){
         // Data Picker Initialization
         $('#datetimepicker').datepicker();
+
+        $("#btnBook").click(function(){
+            var data = {
+                appointment_date: $('#datetimepicker').val(),
+                doctor_id: getIdFromQuerystring()
+            };
+
+            ajaxCall.post('/user/appointment/book', data,
+                success = function(data, textStatus, jqXHR)
+                {
+                    document.location.href = '/user//appointment/list';
+                },
+                error = function(jqXHR, textStatus, errorThrown){
+                    console.log(textStatus + ': ' + errorThrown);
+                }
+            );
+        })
     })
 </script>

@@ -45,3 +45,19 @@ var logout = function(){
             }
         );
 }
+
+var getIdFromQuerystring = function(){
+    var url = window.location.pathname;
+    var id = url.substring(url.lastIndexOf('/') + 1);
+    return  id;
+}
+
+var formatDate = function(dateStr){
+    var date  = new Date(dateStr);
+    if(date != null){
+      return date.toLocaleString()
+    }
+    else{
+      return '';
+    }
+  }
