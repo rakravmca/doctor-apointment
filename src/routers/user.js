@@ -12,9 +12,7 @@ const moment = require('moment')
 router.get('/login', async (req, res) => {
     res.render('login', {
         layout: 'login',
-        title :'Login',
-        data:{
-        }
+        title :'Login'
     })
 });
 

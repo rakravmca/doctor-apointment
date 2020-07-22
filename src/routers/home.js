@@ -137,69 +137,122 @@ router.get('/reports', auth, async (req, res)=>{
     { 
       layout: 'main', 
       title : 'Reports',
-      user : req.user.toJSON()
+      user : req.user.toJSON(),
+       is_doctor: req.doctor != null,
     });
 });
 
+router.get('/reports/patient', auth, async (req, res)=>{  
+  res.render('patient-reports',  
+  { 
+    layout: 'main', 
+    title : 'Reports',
+    user : req.user.toJSON(),
+    is_doctor: req.doctor != null,
+  });
+});
+
 router.post('/reports/create', auth, async (req, res)=>{  
-  // res.render('reports',  
-  // { 
-  //   layout: 'main', 
-  //   title : 'Reports',
-  //   user : req.user.toJSON()
-  // });
-  //const fileName = await generatePdf();
     const {reportType} = req.body;
+    let data = {};
 
-    var now = new Date();
-    now.setHours(0,0,0,0);
-    var todayAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
-        $gte: now,
-        $lte: now
-    }}).sort({appointment_date: 1})
-    .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
+    if(reportType == 'appointments'){
+      var now = new Date();
+        now.setHours(0,0,0,0);
+        var todayAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
+            $gte: now,
+            $lte: now
+        }}).sort({appointment_date: 1})
+        .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
-    let todayAppt = [];
-    for(let i=0;i<todayAppointment.length;i++){
-        todayAppt.push(todayAppointment[i].toJSON())
-    }
+        let todayAppt = [];
+        for(let i=0;i<todayAppointment.length;i++){
+            todayAppt.push(todayAppointment[i].toJSON())
+        }
 
-    let pastDate = new Date();
-    pastDate.setDate(pastDate.getDate() - 1);
-    pastDate.setHours(0,0,0,0);
-    var pastAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
-        $lte: pastDate
-    }}).sort({appointment_date: 1})
-    .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });  
+        let pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - 1);
+        pastDate.setHours(0,0,0,0);
+        var pastAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
+            $lte: pastDate
+        }}).sort({appointment_date: 1})
+        .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });  
 
-    let pastAppt = [];
-    for(let i=0;i<pastAppointment.length;i++){
-        pastAppt.push(pastAppointment[i].toJSON())
-    }
+        let pastAppt = [];
+        for(let i=0;i<pastAppointment.length;i++){
+            pastAppt.push(pastAppointment[i].toJSON())
+        }
+        
+        let nextDate = new Date();
+        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setHours(0,0,0,0);
+        var futureAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
+            $gte: nextDate,
+        }}).sort({appointment_date: 1})
+        .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
+
+        let futureAppt = [];
+        for(let i=0;i<futureAppointment.length;i++){
+            futureAppt.push(futureAppointment[i].toJSON())
+        }
     
-    let nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + 1);
-    nextDate.setHours(0,0,0,0);
-    var futureAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
-        $gte: nextDate,
-    }}).sort({appointment_date: 1})
-    .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
-
-    let futureAppt = [];
-    for(let i=0;i<futureAppointment.length;i++){
-        futureAppt.push(futureAppointment[i].toJSON())
+      data = {
+        todayAppointments : todayAppt,
+        pastAppointments : pastAppt,
+        futureAppointments : futureAppt
+      };
     }
- 
-  let data = {
-    todayAppointments : todayAppt,
-    pastAppointments : pastAppt,
-    futureAppointments : futureAppt
-  };
+    else if(reportType == 'patient-appointments'){
+      var now = new Date();
+        now.setHours(0,0,0,0);
+        var todayAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
+            $gte: now,
+            $lte: now
+        }}).sort({appointment_date: 1})
+        .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
-  let outputFileName = 'appointments.pdf';
+        let todayAppt = [];
+        for(let i=0;i<todayAppointment.length;i++){
+            todayAppt.push(todayAppointment[i].toJSON())
+        }
+
+        let pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - 1);
+        pastDate.setHours(0,0,0,0);
+        var pastAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
+            $lte: pastDate
+        }}).sort({appointment_date: 1})
+        .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });  
+
+        let pastAppt = [];
+        for(let i=0;i<pastAppointment.length;i++){
+            pastAppt.push(pastAppointment[i].toJSON())
+        }
+        
+        let nextDate = new Date();
+        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setHours(0,0,0,0);
+        var futureAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
+            $gte: nextDate,
+        }}).sort({appointment_date: 1})
+        .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
+
+        let futureAppt = [];
+        for(let i=0;i<futureAppointment.length;i++){
+            futureAppt.push(futureAppointment[i].toJSON())
+        }
+    
+      data = {
+        todayAppointments : todayAppt,
+        pastAppointments : pastAppt,
+        futureAppointments : futureAppt
+      };
+    }
+
+  let outputFileName = reportType + '.pdf';
   let outputDir = 'src/public/output';
   let templateDir = 'src/public/templates';
-  let templateFileName = 'appointments.html';
+  let templateFileName = reportType + '.html';
 
   getTemplateHtml(templateDir + '/' + templateFileName).then(async (tmplHtml) => {
     // Now we have the html code of our template in res object

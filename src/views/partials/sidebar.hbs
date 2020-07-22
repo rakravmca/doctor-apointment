@@ -27,11 +27,16 @@
           <span>Doctors</span></a>
       </li> --}}
 
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Appointments
+      </div>
+
       {{#if is_doctor}}
       <li class="nav-item">
         <a class="nav-link" href="/appointment/patient/list">
           <i class="fas fa-fw fa-chart-area"></i>
-          <span>Patient Appointments</span></a>
+          <span>Patient Appointment</span></a>
       </li>
       {{/if}}
 
@@ -39,12 +44,24 @@
       <li class="nav-item">
         <a class="nav-link" href="/appointment/list">
           <i class="fas fa-fw fa-chart-area"></i>
-          <span>My Appointments</span></a>
+          <span>My Appointment</span></a>
       </li>
 
-      {{!-- <!-- Heading -->
+      <!-- Heading -->
       <div class="sidebar-heading">
-        Patient
-      </div> --}}
+        Reports
+      </div>
+      {{#if is_doctor}}
+      <li class="nav-item">
+        <a class="nav-link" href="/reports/patient">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Patient Report</span></a>
+      </li>
+      {{/if}}
+      <li class="nav-item">
+        <a class="nav-link" href="/reports">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>My Report</span></a>
+      </li>
 
     </ul>
