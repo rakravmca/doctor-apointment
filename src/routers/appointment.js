@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 const moment = require('moment')
 
 router.post('/book', auth, async(req, res) => {
-    console.log(req.body)
+    //console.log(req.body)
     try {
         const { appointment_date, doctor_id } = req.body
 
