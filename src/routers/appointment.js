@@ -94,8 +94,58 @@ router.get('/list', auth, async (req, res) => {
     //console.log(appointments)
 
     res.render('appointment-list', {
-        title :'Appointment List',
+        title :'Appointments',
         user : req.user.toJSON(),
+        is_doctor: req.doctor != null,
+        past_appointment : pastAppt,
+        today_appointment : todayAppt,
+        future_appointment : futureAppt
+    })
+});
+
+router.get('/patient/list', auth, async (req, res) => {
+    var now = new Date();
+    now.setHours(0,0,0,0);
+    var todayAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
+        $gte: now,
+        $lte: now
+    }}).sort({appointment_date: 1});
+
+    let todayAppt = [];
+    for(let i=0;i<todayAppointment.length;i++){
+        todayAppt.push(todayAppointment[i].toJSON())
+    }
+
+    let pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 1);
+    pastDate.setHours(0,0,0,0);
+    var pastAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
+        $lte: pastDate
+    }}).sort({appointment_date: 1});  
+
+    let pastAppt = [];
+    for(let i=0;i<pastAppointment.length;i++){
+        pastAppt.push(pastAppointment[i].toJSON())
+    }
+    
+    let nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 1);
+    nextDate.setHours(0,0,0,0);
+    var futureAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
+        $gte: nextDate,
+    }}).sort({appointment_date: 1});
+
+    let futureAppt = [];
+    for(let i=0;i<futureAppointment.length;i++){
+        futureAppt.push(futureAppointment[i].toJSON())
+    }
+
+    //console.log(appointments)
+
+    res.render('patient-appointment-list', {
+        title :'Patient Appointments',
+        user : req.user.toJSON(),
+        is_doctor: req.doctor != null,
         past_appointment : pastAppt,
         today_appointment : todayAppt,
         future_appointment : futureAppt

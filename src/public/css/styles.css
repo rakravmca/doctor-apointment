@@ -19,7 +19,7 @@ body {
 }
 
 footer{
-padding: 10px;
+    padding: 10px !important;
     background: #007bff;
     background: linear-gradient(to right, #0062E6, #33AEFF);
     position: fixed;

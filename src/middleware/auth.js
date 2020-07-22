@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+
+const Doctor = require('../models/Doctor')
 //const Role = require('../models/Role')
 
 const auth = async(req, res, next) => {
@@ -11,12 +13,21 @@ const auth = async(req, res, next) => {
         const data = jwt.verify(token, process.env.JWT_KEY)
 
         const user = await User.findOne({ _id: data._id, 'tokens.token': token })
-                    .select({ "_id": 1, "name": 1, "email": 1, "phone": 1});
+                    .select({"name": 1, "email": 1, "phone": 1});
+
         if (!user) {
             throw new Error()
-        }
+        }        
+            
+        //var doctorCount = await Doctor.countDocuments({user:data._id});
+        var doctor = await Doctor.findOne({user:data._id}).select({"name": 1});
+        //user.is_doctor = doctorCount > 0;
+
+        //console.log(doctorCount)
         
+        //console.log(user)
         req.user = user
+        req.doctor = doctor
         next()
 
         // const isRoleAccess = Role[data.role].find(function(url){ 
