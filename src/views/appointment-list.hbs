@@ -1,36 +1,6 @@
 <div class="row">
-<!-- Earnings (Monthly) Card Example -->
-{{#each appointments}}
-    <div class="col-xs-12 col-sm-4 col-md-4 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                    <div class="text-sm font-weight-bold text-warning mb-1">Date: {{formatDate appointment_date "Do MMMM  YYYY"}}</div>
-                    <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
-                    <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
-                    <hr/>
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Doctor</div>
-                    <div class="text-xs font-weight-bold text-success mb-1">Name: {{doctor.name}}</div>
-                    <div class="text-xs font-weight-bold text-success mb-1">Specialist: {{doctor.specialist}}</div> 
-                    <div class="text-xs font-weight-bold text-success mb-1">Consultation duration : {{doctor.appointment_slot_time}} min</div>
-                    <hr/>
-                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
-                    <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
-                    <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
-                    <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
-                    </div>
-                    <div class="col-auto">
-                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{{/each}}
-
-    <div class="col-xs-12 col-sm-4 col-md-4 mb-4">
-        <a href="/user/doctors" class="btn btn-success btn-icon-split"> 
+    <div class="col-xl-12 col-md-12 mb-4">
+        <a href="/doctor/list" class="btn btn-success btn-icon-split"> 
             <span class="icon text-white-50">
                 <i class="fas fa-check"></i>
             </span>
@@ -38,6 +8,106 @@
         </a>
     </div>
 </div>
+<div class="row">
+    <div class="col-xl-12 col-md-12">
+            <div class="text-md font-weight-bold text-success text-uppercase  mb-1">Today:</div>
+    </div>
+    {{#each today_appointment}}
+        <div class="col-xs-12 col-sm-4 col-md-4 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-warning mb-1">Date: {{formatDate appointment_date "Do MMMM  YYYY"}}</div>
+                        <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
+                        <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
+                        <hr/>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Doctor</div>
+                        <div class="text-xs font-weight-bold text-success mb-1">Name: {{doctor.name}}</div>
+                        <div class="text-xs font-weight-bold text-success mb-1">Specialist: {{doctor.specialist}}</div> 
+                        <div class="text-xs font-weight-bold text-success mb-1">Consultation duration : {{doctor.appointment_slot_time}} min</div>
+                        <hr/>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
+                        </div>
+                        <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>
+<div class="row">
+    <div class="col-xl-12 col-md-12">
+            <div class="text-md font-weight-bold text-success text-uppercase  mb-1">Upcoming:</div>
+    </div>
+    {{#each future_appointment}}
+        <div class="col-xs-12 col-sm-4 col-md-4 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-warning mb-1">Date: {{formatDate appointment_date "Do MMMM  YYYY"}}</div>
+                        <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
+                        <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
+                        <hr/>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Doctor</div>
+                        <div class="text-xs font-weight-bold text-success mb-1">Name: {{doctor.name}}</div>
+                        <div class="text-xs font-weight-bold text-success mb-1">Specialist: {{doctor.specialist}}</div> 
+                        <div class="text-xs font-weight-bold text-success mb-1">Consultation duration : {{doctor.appointment_slot_time}} min</div>
+                        <hr/>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
+                        </div>
+                        <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>
+<div class="row">
+    <div class="col-xl-12 col-md-12">
+        <div class="text-md font-weight-bold text-success text-uppercase  mb-1">History:</div>
+    </div>
+    {{#each past_appointment}}
+        <div class="col-xs-12 col-sm-4 col-md-4 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-warning mb-1">Date: {{formatDate appointment_date "Do MMMM  YYYY"}}</div>
+                        <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
+                        <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
+                        <hr/>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Doctor</div>
+                        <div class="text-xs font-weight-bold text-success mb-1">Name: {{doctor.name}}</div>
+                        <div class="text-xs font-weight-bold text-success mb-1">Specialist: {{doctor.specialist}}</div> 
+                        <div class="text-xs font-weight-bold text-success mb-1">Consultation duration : {{doctor.appointment_slot_time}} min</div>
+                        <hr/>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
+                        <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
+                        </div>
+                        <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>
+
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4" style="height:50px;"></div>
 </div>

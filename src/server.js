@@ -6,7 +6,9 @@ var cookieParser = require('cookie-parser')
 var moment = require('moment')
 
 const userRouter = require('./routers/user')
-const auth = require('./middleware/auth')
+const homeRouter = require('./routers/home')
+const doctorRouter = require('./routers/doctor')
+const appointmentRouter = require('./routers/appointment')
 
 const port = process.env.port || 3000;
  
@@ -51,15 +53,18 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 require('./db/config')
 
-app.get('', auth, (req, res)=>{
-    res.render('home',  
-    { 
-      layout: 'main', 
-      title : 'Dashboard',
-      user : req.user.toJSON()});
-});
+// app.get('', auth, (req, res)=>{
+//     res.render('home',  
+//     { 
+//       layout: 'main', 
+//       title : 'Dashboard',
+//       user : req.user.toJSON()});
+// });
 
+app.use('/', homeRouter)
 app.use('/user', userRouter)
+app.use('/doctor', doctorRouter)
+app.use('/appointment', appointmentRouter)
  
 //Makes the app listen to port 3000
 app.listen(port, () => console.log(`App listening to port ${port}`));
