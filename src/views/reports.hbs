@@ -3,25 +3,73 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <h1 class="h3 mb-0 text-gray-800">{{title}}</h1>
-  <a href="#" class="btn btn-success btn-icon-split" onclick="generatePdf()"> 
-            <span class="icon text-white-50">
-                <i class="fas fa-check"></i>
-            </span>
-            <span class="text">Export PDF</span>
+  <a href="#" class="btn btn-success btn-icon-split" id="btnExport"> 
+    <span class="icon text-white-50">
+        <i class="fas fa-check"></i>
+    </span>
+    <span class="text">Export PDF</span>
  </a>
 </div>  
+<div class="row">
+    <div class="col-md-3">
+        Status:
+         <!-- Default unchecked -->
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="checkOpen" value="Open">
+            <label class="custom-control-label" for="checkOpen">Open</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="checkClosed" value="Closed">
+            <label class="custom-control-label" for="checkClosed">Closed</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="checkCancelled" value="Cancelled">
+            <label class="custom-control-label" for="checkCancelled">Cancelled</label>
+        </div>
+    </div>
+    <div class="col-md-3">
+        Start Date: <input type='text' class="form-control" id='dtStart' class='datepicker'/>
+    </div>
+    <div class="col-md-3">
+        End Date: <input type='text' class="form-control" id='dtEnd' class='datepicker'/>
+    </div>
 
-  <script>
-function generatePdf(){
-     ajaxCall.post('/reports/create', {reportType:'appointments'},
-            success = function(data, textStatus, jqXHR)
-            {
-                window.open('/output/' + data.fileName, "_blank"); 
-                //document.location.href = '/output/' + data.fileName;
-            },
-            error = function(data, textStatus, jqXHR){
-                console.log(textStatus + ': ' + jqXHR);
+</div>
+<div class="row">
+    
+    <div class="col-md-3">
+       
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#dtStart').datepicker();
+        $('#dtEnd').datepicker();
+
+        $("#btnExport").click(function(){
+            var statuses = []; 
+            $("input:checkbox.custom-control-input:checked").each(function() { 
+                statuses.push($(this).val()); 
+            });
+
+            let data = {
+                reportType:'appointments',
+                startDate : $('#dtStart').val(),
+                endDate : $('#dtEnd').val(),
+                statuses : statuses
             }
-        );
-}
-  </script>
+
+            ajaxCall.post('/reports/create', data,
+                    success = function(data, textStatus, jqXHR)
+                    {
+                        window.open('/output/' + data.fileName, "_blank"); 
+                        //document.location.href = '/output/' + data.fileName;
+                    },
+                    error = function(data, textStatus, jqXHR){
+                        console.log(textStatus + ': ' + jqXHR);
+                    }
+                );
+        })
+    })
+</script>

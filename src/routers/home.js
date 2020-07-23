@@ -153,16 +153,94 @@ router.get('/reports/patient', auth, async (req, res)=>{
 });
 
 router.post('/reports/create', auth, async (req, res)=>{  
-    const {reportType} = req.body;
+    let {reportType, startDate, endDate, statuses} = req.body;
     let data = {};
+    let startDt = null;
+    let endDt = null;
+
+    if(!statuses){
+      statuses = ['Open','Closed','Cancelled'];
+    }
+
+    console.log(startDate)
+
+    if(startDate){
+      startDt = new Date(startDate);
+      startDt.setHours(0,0,0,0);
+    }
+
+    if(startDate){
+      endDt = new Date(endDate);
+      endDt.setHours(0,0,0,0);
+    }
+    
+    let now = new Date();
+    now.setHours(0,0,0,0);  
+
+    let pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 1);
+    pastDate.setHours(0,0,0,0);
+        
+    let nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 1);
+    nextDate.setHours(0,0,0,0);    
+
+    let todayDateFilter = {};
+    let pastDateFilter = {};
+    let futureDateFilter ={};
+
+    todayDateFilter = {
+      $gte: now,
+      $lte: now
+    };
+
+    if(startDt != null){
+      if(endDt != null && endDt.getTime() > pastDate.getTime()){
+        pastDateFilter = {
+          $gte: startDt,
+          $lte: pastDate
+        };
+      }
+      else{
+        pastDateFilter = {
+          $gte: startDt,
+          $lte: endDt
+        };
+      }
+    }
+    else{
+      pastDateFilter = {
+        $lte: pastDate
+      };
+    }
+    
+    if(endDt != null){
+      if(startDt != null && startDt.getTime() < nextDate.getTime()){
+        futureDateFilter = {
+          $gte: nextDate,
+          $lte: endDt
+        };
+      }
+      else{
+        futureDateFilter = {
+          $gte: startDt,
+          $lte: endDt
+        };
+      }
+    }
+    else{
+      futureDateFilter = {
+        $gte: nextDate
+      };
+    }
 
     if(reportType == 'appointments'){
-      var now = new Date();
-        now.setHours(0,0,0,0);
-        var todayAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
-            $gte: now,
-            $lte: now
-        }}).sort({appointment_date: 1})
+        let todayAppointment =  await Appointment.find(
+          {
+            creater : req.user._id, 
+            appointment_date : todayDateFilter,
+            appointment_status : { $in: statuses }
+          }).sort({appointment_date: 1})
         .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
         let todayAppt = [];
@@ -170,25 +248,25 @@ router.post('/reports/create', auth, async (req, res)=>{
             todayAppt.push(todayAppointment[i].toJSON())
         }
 
-        let pastDate = new Date();
-        pastDate.setDate(pastDate.getDate() - 1);
-        pastDate.setHours(0,0,0,0);
-        var pastAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
-            $lte: pastDate
-        }}).sort({appointment_date: 1})
+        let pastAppointment =  await Appointment.find(
+          {
+            creater : req.user._id, 
+            appointment_date : pastDateFilter,
+            appointment_status : { $in: statuses }
+          }).sort({appointment_date: 1})
         .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });  
 
         let pastAppt = [];
         for(let i=0;i<pastAppointment.length;i++){
             pastAppt.push(pastAppointment[i].toJSON())
         }
-        
-        let nextDate = new Date();
-        nextDate.setDate(nextDate.getDate() + 1);
-        nextDate.setHours(0,0,0,0);
-        var futureAppointment =  await Appointment.find({creater : req.user._id, appointment_date : {
-            $gte: nextDate,
-        }}).sort({appointment_date: 1})
+
+        let futureAppointment =  await Appointment.find(
+          {
+            creater : req.user._id, 
+            appointment_date : futureDateFilter,
+            appointment_status : { $in: statuses }
+          }).sort({appointment_date: 1})
         .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
         let futureAppt = [];
@@ -203,12 +281,12 @@ router.post('/reports/create', auth, async (req, res)=>{
       };
     }
     else if(reportType == 'patient-appointments'){
-      var now = new Date();
-        now.setHours(0,0,0,0);
-        var todayAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
-            $gte: now,
-            $lte: now
-        }}).sort({appointment_date: 1})
+        var todayAppointment =  await Appointment.find(
+          {
+            doctor : req.doctor._id, 
+            appointment_date : todayDateFilter,
+            appointment_status : { $in: statuses }
+          }).sort({appointment_date: 1})
         .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
         let todayAppt = [];
@@ -216,25 +294,25 @@ router.post('/reports/create', auth, async (req, res)=>{
             todayAppt.push(todayAppointment[i].toJSON())
         }
 
-        let pastDate = new Date();
-        pastDate.setDate(pastDate.getDate() - 1);
-        pastDate.setHours(0,0,0,0);
-        var pastAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
-            $lte: pastDate
-        }}).sort({appointment_date: 1})
+        var pastAppointment =  await Appointment.find(
+          {
+            doctor : req.doctor._id, 
+            appointment_date : pastDateFilter,
+            appointment_status : { $in: statuses }
+          }).sort({appointment_date: 1})
         .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });  
 
         let pastAppt = [];
         for(let i=0;i<pastAppointment.length;i++){
             pastAppt.push(pastAppointment[i].toJSON())
         }
-        
-        let nextDate = new Date();
-        nextDate.setDate(nextDate.getDate() + 1);
-        nextDate.setHours(0,0,0,0);
-        var futureAppointment =  await Appointment.find({doctor : req.doctor._id, appointment_date : {
-            $gte: nextDate,
-        }}).sort({appointment_date: 1})
+
+        var futureAppointment =  await Appointment.find(
+          {
+            doctor : req.doctor._id, 
+            appointment_date : futureDateFilter,
+            appointment_status : { $in: statuses }
+          }).sort({appointment_date: 1})
         .populate({ path: 'doctor', select: 'name specialist appointment_slot_time' });
 
         let futureAppt = [];
