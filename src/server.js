@@ -43,7 +43,22 @@ app.engine( 'hbs', exphbs({
   helpers: {
     dateFormat: function (date, format) {
         return moment(date).format(format);
-    }
+    },
+    ifeq : function(a, b, opts) {
+      if (a == b) {
+      return opts.fn(this) 
+     } else { 
+         return opts.inverse(this) 
+      } 
+     },
+     ifnoteq : function (a, b, options) {
+      if (a != b) { return options.fn(this); }
+      return options.inverse(this);
+     },
+     toString : function(obj){
+       console.log(obj.toString() + '');
+       return obj.toString() + '';
+     }
   }
 }));
 

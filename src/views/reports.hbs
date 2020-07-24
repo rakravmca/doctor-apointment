@@ -44,8 +44,12 @@
 
 <script>
     $(function(){
-        $('#dtStart').datepicker();
-        $('#dtEnd').datepicker();
+        $('#dtStart').datepicker({ 
+         autoclose: true
+      });
+        $('#dtEnd').datepicker({
+         autoclose: true
+      });
 
         $("#btnExport").click(function(){
             var statuses = []; 

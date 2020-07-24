@@ -24,30 +24,90 @@ router.post('/book', auth, async(req, res) => {
 
         let day_start_time = doctor.day_start_time;
         let appointment_slot_time = doctor.appointment_slot_time;
-        let appointmentCount = await Appointment.countDocuments({doctor:doctor_id, appointment_date : appointment_date});
-
-        // console.log(appointmentCount)
-        // console.log(doctor.patients_per_day)
-
-        let appointmentTime = (day_start_time * 60) +  (appointmentCount * appointment_slot_time);
-        appointmentTime = appointmentTime / 60;
-
-        var appointment = new Appointment({
-            doctor : doctor,
+        let appointmentCount = await Appointment.countDocuments({
+            doctor:doctor_id, 
             appointment_date : appointment_date,
-            appointment_time : appointmentTime,
-            patient_name : user.name,
-            patient_email : user.email,
-            patient_phone : user.phone,
-            appointment_status : 'Open',
-            creater : user
+            appointment_status : 'Open'
         });
 
-        var result = await appointment.save();
+        //console.log(appointmentCount)
+        //console.log(doctor.patients_per_day)
 
-        res.json({appointment_detail : result })
+        if(appointmentCount < doctor.patients_per_day){
+            let appointmentTime = (day_start_time * 60) +  (appointmentCount * appointment_slot_time);
+            appointmentTime = appointmentTime / 60;
+
+            var appointment = new Appointment({
+                doctor : doctor,
+                appointment_date : appointment_date,
+                appointment_time : appointmentTime,
+                patient_name : user.name,
+                patient_email : user.email,
+                patient_phone : user.phone,
+                appointment_status : 'Open',
+                creater : user
+            });
+
+            var result = await appointment.save();
+
+            res.json({appointment_detail : result })
+        }
+        else{
+            res.json({appointment_detail : null })
+        }
     } catch (error) {
         res.status(400).send('error')
+    }
+});
+
+router.post('/cancel', auth, async(req, res) => {
+    //console.log(req.body)
+    try {
+        const { appointment_id } = req.body;
+        let appointment = await Appointment.findById(appointment_id);
+        appointment.appointment_status = 'Cancelled'
+        await appointment.save();
+
+        let appointment_date = appointment.appointment_date;
+        let doctor_id = appointment.doctor;
+        console.log(appointment_date)
+
+        let appointments = await Appointment.find({
+            doctor:doctor_id, 
+            appointment_date : appointment_date, 
+            appointment_status : 'Open'
+        });        
+
+        //console.log(appointments)
+
+        //Get doctor details
+        var doctor =  await Doctor.findById(doctor_id);
+        let day_start_time = doctor.day_start_time;
+        let appointment_slot_time = doctor.appointment_slot_time;
+
+        appointments.forEach(function(doc, index) {
+            let appointment_time = ((day_start_time * 60) +  (index * appointment_slot_time)) / 60;
+            //console.log(doc)
+            doc.appointment_time = appointment_time;
+            doc.save();
+        });
+
+        res.json({appointment_detail : appointment })
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
+
+router.post('/close', auth, async(req, res) => {
+    //console.log(req.body)
+    try {
+        const { appointment_id } = req.body;
+        let appointment = await Appointment.findById(appointment_id);
+        appointment.appointment_status = 'Closed'
+        await appointment.save();
+        res.json({appointment_detail : appointment })
+    } catch (error) {
+        res.status(400).send(error)
     }
 });
 

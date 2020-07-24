@@ -12,17 +12,38 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                        <div class="text-sm font-weight-bold text-warning mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
-                        <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
-                        <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
-                        </div>
-                        <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
+                            {{#ifeq appointment_status 'Open'}}
+                            <div class="text-sm font-weight-bold text-warning mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            {{#ifeq appointment_status 'Cancelled'}}
+                            <div class="text-sm font-weight-bold text-danger mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold text-danger mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold text-danger mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            {{#ifeq appointment_status 'Closed'}}
+                            <div class="text-sm font-weight-bold mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
+                            </div>
+                            <div class="col-auto">
+                                {{#ifeq appointment_status 'Open'}}
+                                <div style="float: right;">
+                                    <a href="#" class="btn btn-light btn-icon-split btn-sm" onclick="closeAppointment('{{_id}}')">
+                                        <span class="icon text-white-50">
+                                        <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span class="text">Close</span>
+                                    </a>
+                                </div>
+                                {{/ifeq}}
+                            </div>
                     </div>
                 </div>
             </div>
@@ -39,17 +60,38 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                        <div class="text-sm font-weight-bold text-warning mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
-                        <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
-                        <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
-                        </div>
-                        <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
+                            {{#ifeq appointment_status 'Open'}}
+                            <div class="text-sm font-weight-bold text-warning mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            {{#ifeq appointment_status 'Cancelled'}}
+                            <div class="text-sm font-weight-bold text-danger mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold text-danger mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold text-danger mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            {{#ifeq appointment_status 'Closed'}}
+                            <div class="text-sm font-weight-bold mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
+                            </div>
+                            <div class="col-auto">
+                                {{#ifeq appointment_status 'Open'}}
+                                <div style="float: right;">
+                                    <a href="#" class="btn btn-danger btn-icon-split btn-sm" onclick="cancelAppointment('{{_id}}')">
+                                        <span class="icon text-white-50">
+                                        <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span class="text">Cancel</span>
+                                    </a>
+                                </div>
+                                {{/ifeq}}
+                            </div>
                     </div>
                 </div>
             </div>
@@ -66,17 +108,45 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                        <div class="text-sm font-weight-bold text-warning mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
-                        <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
-                        <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
-                        <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
-                        </div>
-                        <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
+                            {{#ifeq appointment_status 'Open'}}
+                            <div class="text-sm font-weight-bold text-warning mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold text-warning mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold text-warning mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            {{#ifeq appointment_status 'Cancelled'}}
+                            <div class="text-sm font-weight-bold text-danger mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold text-danger mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold text-danger mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            {{#ifeq appointment_status 'Closed'}}
+                            <div class="text-sm font-weight-bold mb-1">Date: {{dateFormat appointment_date "Do MMMM  YYYY"}}</div>
+                            <div class="text-sm font-weight-bold mb-1">Time: {{user_appointment_time}}</div>
+                            <div class="text-sm font-weight-bold mb-1">Status: {{appointment_status}}</div>
+                            {{/ifeq}}
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Patient</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Name: {{patient_name}}</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Email: {{patient_email}}</div> 
+                            <div class="text-xs font-weight-bold text-info mb-1">Phone: {{patient_phone}}</div> 
+                            </div>
+                            <div class="col-auto">
+                                {{#ifeq appointment_status 'Open'}}
+                                <div style="float: right;">
+                                    <a href="#" class="btn btn-danger btn-icon-split btn-sm" onclick="cancelAppointment('{{_id}}')">
+                                        <span class="icon text-white-50">
+                                        <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span class="text">Cancel</span>
+                                    </a>
+                                    <br/>
+                                    <a href="#" class="btn btn-light btn-icon-split btn-sm" onclick="closeAppointment('{{_id}}')">
+                                        <span class="icon text-white-50">
+                                        <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span class="text">Close</span>
+                                    </a>
+                                </div>
+                                {{/ifeq}}
+                            </div>
                     </div>
                 </div>
             </div>
@@ -87,3 +157,36 @@
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4" style="height:10px;"></div>
 </div>
+
+<script>
+    function cancelAppointment(id){
+        var data = {
+                appointment_id: id
+            };
+
+            ajaxCall.post('/appointment/cancel', data,
+                success = function(data, textStatus, jqXHR)
+                {
+                    document.location.href = '/appointment/patient/list';
+                },
+                error = function(jqXHR, textStatus, errorThrown){
+                    console.log(textStatus + ': ' + errorThrown);
+                }
+            );
+    }
+    function closeAppointment(id){
+        var data = {
+                appointment_id: id
+            };
+
+            ajaxCall.post('/appointment/close', data,
+                success = function(data, textStatus, jqXHR)
+                {
+                    document.location.href = '/appointment/patient/list';
+                },
+                error = function(jqXHR, textStatus, errorThrown){
+                    console.log(textStatus + ': ' + errorThrown);
+                }
+            );
+    }
+</script>
